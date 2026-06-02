@@ -16,8 +16,7 @@
         <a href="#top" class="text-decoration-none d-inline-flex align-items-center">
     <img src="{{ asset('img/logo.png') }}" alt="Логотип" style="height: 100px; width: auto;"></a>            <div class="d-none d-md-flex gap-3">
                 <a href="#menu" class="nav-link-soft">Меню</a>
-                <a href="#recs" class="nav-link-soft">Рекомендации</a>
-                <a href="#audience" class="nav-link-soft">Для кого</a>
+                <a href="#about" class="nav-link-soft">О платформе</a>
                 <a href="#why" class="nav-link-soft">Зачем</a>
                 <a href="#experts" class="nav-link-soft">Топ‑специалисты</a>
                 <a href="#rewards" class="nav-link-soft">Награды</a>
@@ -29,40 +28,74 @@
         </div>
     </div>
 
-    <section class="hero reveal in" id="top" style="min-height: 85vh; display: flex; align-items: center;">
-        <div class="container position-relative h-100 d-flex flex-column justify-content-center">
-            <div class="row align-items-center position-relative z-1 w-100 mt-4 g-4">
-                <div class="col-lg-6 col-md-12 mb-4 mb-lg-0" style="z-index: 2;">
-                    <img src="{{ asset('img/logo_letter.png') }}" alt="Логотип" style="height: 100px; width: auto; margin-bottom: 1rem;">
-                    <h1 style="font-size: clamp(2rem, 4vw, 3.5rem);">— кибербезопасность через практику. <br>
-                    Решай задачи. Прокачивайся. Становись экспертом.</h1>
-                </div>
-                <div class="col-lg-6 col-md-12 hero-dino">
+    <section class="hero reveal in" id="top">
+        <div class="container hero-inner position-relative h-100">
+            <div class="hero-brand">
+                <h1 class="hero-title">КИБЕР-ЛАБ</h1>
+                <div class="hero-dino">
                     <img src="{{ asset('img/dino.png') }}" alt="Кибер-Лаб динозавр">
                 </div>
             </div>
         </div>
-        
-        <!-- Кнопка регистрации справа внизу -->
-        <div class="position-absolute" style="bottom: 40px; right: 50px; z-index: 3;">
+
+        <div class="hero-register">
             <a href="{{ route('register') }}" class="pill-btn accent fs-4 px-5 py-3 shadow">Регистрация</a>
+        </div>
+
+        <div class="section-line" aria-hidden="true">
+            <img src="{{ asset('img/line.png') }}" alt="">
         </div>
     </section>
 
-    <div class="container pt-4">
-        <section class="section reveal" id="recs">
-            <h2 class="title-xl">Рекомендации</h2>
-            <p class="subtitle">Чтобы прогресс шёл стабильно: занимайтесь короткими сессиями, сразу сдавайте задания и отслеживайте статус проверки от админа.</p>
-            <div class="chips">
-                <div class="chip active">20-30 минут в день</div>
-                <div class="chip">Теоретические рекомендации</div>
-                <div class="chip dark">Фиксируй результат</div>
-                <div class="chip">Собирай награды</div>
+    <section class="about-section reveal" id="about">
+        <div class="container">
+            <div class="about-head text-center">
+                <h2 class="about-title">Что такое Кибер-Лаб</h2>
+                <p class="about-lead">
+                    Кибер-Лаб — учебная платформа по информационной безопасности. <br> Решай задачи. Прокачивайся. Становись экспертом.
+                </p>
             </div>
-        </section>
+            <div class="row g-4 g-lg-5 about-features">
+                <div class="col-md-4">
+                    <div class="about-feature">
+                        <span class="about-corner about-corner-tl" aria-hidden="true"></span>
+                        <span class="about-corner about-corner-tr" aria-hidden="true"></span>
+                        <span class="about-corner about-corner-bl" aria-hidden="true"></span>
+                        <span class="about-corner about-corner-br" aria-hidden="true"></span>
+                        <h3 class="about-feature-title"><span class="about-accent">Практика</span> в деле</h3>
+                        <p class="about-feature-desc">Задания по криптографии, web, сетям и аутентификации — не теория в вакууме, а навыки, которые можно применить</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="about-feature">
+                        <span class="about-corner about-corner-tl" aria-hidden="true"></span>
+                        <span class="about-corner about-corner-tr" aria-hidden="true"></span>
+                        <span class="about-corner about-corner-bl" aria-hidden="true"></span>
+                        <span class="about-corner about-corner-br" aria-hidden="true"></span>
+                        <h3 class="about-feature-title">Путь <span class="about-accent">по уровням</span></h3>
+                        <p class="about-feature-desc">Темы разбиты на уровни сложности — от базовых задач к более продвинутым, с понятным прогрессом</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="about-feature">
+                        <span class="about-corner about-corner-tl" aria-hidden="true"></span>
+                        <span class="about-corner about-corner-tr" aria-hidden="true"></span>
+                        <span class="about-corner about-corner-bl" aria-hidden="true"></span>
+                        <span class="about-corner about-corner-br" aria-hidden="true"></span>
+                        <h3 class="about-feature-title"><span class="about-accent">Проверка</span> ответов</h3>
+                        <p class="about-feature-desc">Часть заданий проверяется автоматически, остальные — экспертами с комментарием и статусом в личном кабинете</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <section class="section" id="menu">
-            <h3 class="mb-3 fw-bold" style="font-size:2rem;">Меню направлений ИБ</h3>
+    <section class="menu-section section reveal" id="menu">
+        <div class="section-line section-line-top" aria-hidden="true">
+            <img src="{{ asset('img/line.png') }}" alt="">
+        </div>
+        <div class="container">
+            <h3 class="menu-section-title mb-3">Меню направлений ИБ</h3>
             <div class="row g-3">
                 <div class="col-md-6 col-lg-3 reveal">
                     <div class="service-card dark">
@@ -93,9 +126,15 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="section" id="audience">
+    <section class="lime-section">
+        <div class="section-line section-line-top" aria-hidden="true">
+            <img src="{{ asset('img/line.png') }}" alt="">
+        </div>
+        <div class="container">
+        <!-- <section class="section" id="audience">
             <div class="highlight reveal">
                 <div class="row g-4 align-items-center">
                     <div class="col-lg-7">
@@ -117,7 +156,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <!-- <section class="section" id="why">
             <h3 class="mb-3 fw-bold" style="font-size:2rem;">Зачем</h3>
@@ -130,8 +169,8 @@
             </div>
         </section> -->
 
-        <section class="section" id="experts">
-            <h3 class="mb-3 fw-bold" style="font-size:2rem;">Топовые специалисты платформы</h3>
+        <section class="section reveal" id="experts">
+            <h3 class="lime-section-title mb-3">Топовые специалисты платформы</h3>
             <div class="row g-3">
                 @foreach(($experts ?? collect()) as $expert)
                 <div class="col-md-4 reveal">
@@ -178,15 +217,16 @@
             </div>
         </section>
 
-        <section class="section" id="rewards">
-            <h3 class="mb-3 fw-bold" style="font-size:2rem;">Система награждения</h3>
+        <section class="section reveal" id="rewards">
+            <h3 class="lime-section-title mb-3">Система награждения</h3>
             <div class="row g-3">
                 <div class="col-md-3 reveal"><div class="service-card accent"><div class="icon-dot mb-2">🥇</div><h6 class="fw-bold">Первый уровень</h6><p class="mb-0">За старт и успешную первую сдачу.</p></div></div>
                 <div class="col-md-3 reveal"><div class="service-card dark"><div class="icon-dot mb-2">🔥</div><h6 class="fw-bold">Серия</h6><p class="mb-0 text-white-50">За стабильное обучение несколько дней подряд.</p></div></div>
                 <div class="col-md-3 reveal"><div class="service-card"><div class="icon-dot mb-2">👑</div><h6 class="fw-bold">Топ‑специалист</h6><p class="mb-0 text-muted">За максимальное прохождение платформы.</p></div></div>
             </div>
         </section>
-    </div>
+        </div>
+    </section>
 
     <div class="dino-runner" id="dinoRunner" aria-hidden="true">
         <img id="dinoFrame" src="{{ asset('img/dino-stand.png') }}" alt="">

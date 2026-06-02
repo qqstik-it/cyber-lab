@@ -1,4 +1,13 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/fonts/Montserrat-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
+    --font-body: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --accent: #d8f05e;
     --accent-hover: #c5dc4f;
     --accent-ink: #111111;
@@ -13,7 +22,15 @@
 body {
     background-color: var(--bg-main);
     color: var(--text-main);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-body);
+}
+
+button,
+input,
+textarea,
+select,
+.btn {
+    font-family: inherit;
 }
 
 .navbar {
