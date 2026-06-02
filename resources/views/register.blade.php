@@ -3,21 +3,18 @@
 @section('title', 'Регистрация')
 
 @section('content')
-<div class="row min-vh-100 align-items-center">
+<div class="auth-page min-vh-100 d-flex align-items-center">
+<div class="container-fluid">
+<div class="row align-items-center">
     <div class="col-md-6 d-none d-md-block p-5">
-        <div class="card bg-dark text-white p-5 h-100 overflow-hidden" style="background-image: url('https://img.freepik.com/free-vector/abstract-digital-technology-background-with-mesh-lines_1017-25121.jpg'); background-size: cover; border-radius: 30px;">
-            <div class="position-relative" style="z-index: 2;">
-                <h1 class="fw-bold display-4 mb-4">Кибер-Лаб</h1>
-                <p class="lead opacity-75">Добро пожаловать в современную платформу для изучения информационной безопасности.</p>
+        <div class="auth-panel text-white p-5 h-100 d-flex flex-column">
+            <div class="mt-auto text-center auth-panel-dino">
+                <img src="{{ asset('img/dino.png') }}" alt="Кибер-Лаб динозавр" class="img-fluid">
             </div>
-            <div class="mt-auto text-center" style="z-index: 2;">
-                <img src="https://img.freepik.com/free-vector/digital-shield-security-concept-protection-antivirus_1017-29538.jpg" class="img-fluid rounded-4 shadow-lg w-75">
-            </div>
-            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
         </div>
     </div>
     <div class="col-md-6 p-md-5">
-        <div class="card p-5 border-0 shadow-none bg-transparent">
+        <div class="card auth-form p-5 border-0 shadow-none">
             <h2 class="fw-bold mb-4">Регистрация в Кибер-Лаб</h2>
             
             <div class="btn-group w-100 mb-5 p-1 bg-light rounded-pill">
@@ -58,5 +55,7 @@
             </form>
         </div>
     </div>
+</div>
+</div>
 </div>
 @endsection

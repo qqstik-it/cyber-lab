@@ -17,7 +17,7 @@
 }
 
 body { background: var(--bg) !important; color: var(--ink); font-family: var(--font-body, 'Montserrat', sans-serif); }
-.landing-wrap { padding-bottom: 60px; }
+
 
 .landing-wrap,
 .landing-wrap * {
@@ -44,7 +44,7 @@ body { background: var(--bg) !important; color: var(--ink); font-family: var(--f
 .nav-link-soft { color: #222; text-decoration: none; font-weight: 500; }
 .nav-link-soft:hover { color: #000; }
 .pill-btn {
-    border: 1px solid #111; color: #111;
+    color: #111;
     background: #fff; padding: 10px 16px; font-weight: 700;
     text-decoration: none; display: inline-block;
 }

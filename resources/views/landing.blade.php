@@ -17,7 +17,6 @@
     <img src="{{ asset('img/logo.png') }}" alt="Логотип" style="height: 100px; width: auto;"></a>            <div class="d-none d-md-flex gap-3">
                 <a href="#menu" class="nav-link-soft">Меню</a>
                 <a href="#about" class="nav-link-soft">О платформе</a>
-                <a href="#why" class="nav-link-soft">Зачем</a>
                 <a href="#experts" class="nav-link-soft">Топ‑специалисты</a>
                 <a href="#rewards" class="nav-link-soft">Награды</a>
             </div>
@@ -213,7 +212,7 @@
                 @endforeach
             </div>
             <div class="text-center mt-4">
-                <a href="{{ route('register') }}" class="pill-btn accent">Хочу в рейтинг специалистов</a>
+                <a href="{{ route('register') }}" class="pill-btn">Хочу в рейтинг специалистов</a>
             </div>
         </section>
     </div>

@@ -42,7 +42,7 @@ select,
     background-color: var(--bg-surface);
     color: var(--text-main);
     border: 1px solid var(--line);
-    border-radius: 15px;
+    border-radius: 0px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.28);
 }
 
@@ -146,3 +146,30 @@ select,
 
 .border-cyan { border-color: var(--accent) !important; }
 .bg-cyan { background-color: var(--accent) !important; color: var(--accent-ink) !important; }
+
+.rounded-pill {
+    border-radius: 0 !important;
+}
+
+.auth-page {
+    background: url('/img/bg_black.png') center/cover no-repeat fixed;
+    color: var(--text-main);
+}
+
+.auth-form {
+    background-color: #0a0a0a;
+    border: 1px solid var(--accent) !important;
+    border-radius: 0px;
+}
+
+.auth-panel-dino img {
+    width: min(400px, 75%);
+    height: auto;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.password-toggle {
+    cursor: pointer;
+    user-select: none;
+}
