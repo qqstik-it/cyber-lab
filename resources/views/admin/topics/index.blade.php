@@ -3,7 +3,9 @@
 @section('title', 'Темы (админка)')
 
 @section('admin_content')
-@php($isAdmin = auth()->user()?->isAdmin())
+@php
+    $isAdmin = auth()->user()?->isAdmin();
+@endphp
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div class="fw-bold fs-4">Темы</div>
     @if($isAdmin)

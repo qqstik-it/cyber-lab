@@ -216,17 +216,7 @@
                 <a href="{{ route('register') }}" class="pill-btn accent">Хочу в рейтинг специалистов</a>
             </div>
         </section>
-
-        <section class="section reveal" id="rewards">
-            <h3 class="lime-section-title mb-3">Система награждения</h3>
-            <div class="row g-3">
-                <div class="col-md-3 reveal"><div class="service-card accent"><div class="icon-dot mb-2">🥇</div><h6 class="fw-bold">Первый уровень</h6><p class="mb-0">За старт и успешную первую сдачу.</p></div></div>
-                <div class="col-md-3 reveal"><div class="service-card dark"><div class="icon-dot mb-2">🔥</div><h6 class="fw-bold">Серия</h6><p class="mb-0 text-white-50">За стабильное обучение несколько дней подряд.</p></div></div>
-                <div class="col-md-3 reveal"><div class="service-card"><div class="icon-dot mb-2">👑</div><h6 class="fw-bold">Топ‑специалист</h6><p class="mb-0 text-muted">За максимальное прохождение платформы.</p></div></div>
-            </div>
-        </section>
-        </div>
-    </section>
+    </div>
 
     <div class="dino-runner" id="dinoRunner" aria-hidden="true">
         <img id="dinoFrame" src="{{ asset('img/dino-stand.png') }}" alt="">

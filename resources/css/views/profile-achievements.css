@@ -1,0 +1,21 @@
+.profile-tab-pane {
+    display: none;
+}
+.profile-tab-pane.active {
+    display: block;
+}
+.profile-tabs .list-group-item:not(.active):not(:disabled) {
+    background: transparent;
+    color: var(--text-main, #e6edf3);
+}
+.profile-tabs .list-group-item:disabled {
+    opacity: 0.45;
+}
+.achievement-section + .achievement-section {
+    margin-top: 1.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line, #2a3340);
+}
+.achievement-item-earned {
+    border-left: 3px solid var(--accent, #d8f05e) !important;
+}

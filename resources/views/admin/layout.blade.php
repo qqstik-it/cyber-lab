@@ -39,7 +39,18 @@
 @endpush
 
 @section('content')
-@php($panelUser = auth()->user())
+@php
+    $panelUser = auth()->user();
+    $adminNav = match (true) {
+        request()->routeIs('admin.dashboard') => 'dashboard',
+        request()->routeIs('admin.topics.*', 'admin.levels.*', 'admin.tasks.*') => 'topics',
+        request()->routeIs('admin.users.*') => 'users',
+        request()->routeIs('admin.submissions.*') => 'submissions',
+        request()->routeIs('admin.achievements.*') => 'achievements',
+        default => null,
+    };
+    $adminNavBtn = fn (string $key) => $adminNav === $key ? 'btn btn-cyan' : 'btn btn-outline-dark';
+@endphp
 <div class="container py-4 admin-shell">
     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
         <div>
@@ -48,16 +59,28 @@
                 {{ $panelUser?->isAdmin() ? 'Управление контентом и проверка заданий' : 'Проверка сдач и добавление заданий' }}
             </div>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Панель</a>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('admin.dashboard') }}" class="{{ $adminNavBtn('dashboard') }}">Панель</a>
             @if($panelUser?->canManageTasks())
-                <a href="{{ route('admin.topics.index') }}" class="btn btn-outline-dark">Темы</a>
+                <a href="{{ route('admin.topics.index') }}" class="{{ $adminNavBtn('topics') }}">Темы</a>
             @endif
-            <a href="{{ route('admin.submissions.index') }}" class="btn btn-cyan">Проверки</a>
+            @if($panelUser?->canManageUsers())
+                <a href="{{ route('admin.users.index') }}" class="{{ $adminNavBtn('users') }}">Пользователи</a>
+            @endif
+            @if($panelUser?->isAdmin())
+                <a href="{{ route('admin.achievements.index') }}" class="{{ $adminNavBtn('achievements') }}">Награды</a>
+            @endif
+            <a href="{{ route('admin.submissions.index') }}" class="{{ $adminNavBtn('submissions') }}">Проверки</a>
         </div>
     </div>
+
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
     @yield('admin_content')
 </div>
 @endsection
-

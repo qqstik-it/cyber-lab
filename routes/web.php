@@ -9,6 +9,9 @@ use App\Http\Controllers\Admin\AdminTopicController;
 use App\Http\Controllers\Admin\AdminLevelController;
 use App\Http\Controllers\Admin\AdminTaskController;
 use App\Http\Controllers\Admin\AdminSubmissionController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminAchievementController;
+use App\Services\UserRatingService;
 use App\Models\User;
 use App\Models\Topic;
 use App\Models\Level;
@@ -262,80 +265,8 @@ Route::get('/', function () {
         return redirect()->route('home');
     }
 
-    $totalTasks = (int) DB::table('tasks')->count();
-
-    $experts = DB::table('users')
-        ->leftJoin('task_submissions as ts', 'ts.user_id', '=', 'users.id')
-        ->where(function ($query) {
-            $query->whereNull('users.role')
-                ->orWhere('users.role', '!=', 'admin');
-        })
-        ->groupBy('users.id', 'users.name', 'users.avatar')
-        ->select(
-            'users.id',
-            'users.name',
-            'users.avatar',
-            DB::raw("SUM(CASE WHEN ts.status = 'accepted' THEN 1 ELSE 0 END) as accepted_count"),
-            DB::raw("COUNT(ts.id) as submitted_count")
-        )
-        ->get()
-        ->map(function ($expert) use ($totalTasks) {
-            $accepted = (int) $expert->accepted_count;
-            $submitted = (int) $expert->submitted_count;
-
-            $progress = $totalTasks > 0
-                ? (int) round(min(100, ($accepted / $totalTasks) * 100))
-                : 0;
-
-            $completedTasks = DB::table('task_submissions as ts')
-                ->join('tasks', 'tasks.id', '=', 'ts.task_id')
-                ->leftJoin('levels', 'levels.id', '=', 'tasks.level_id')
-                ->leftJoin('topics', 'topics.id', '=', 'levels.topic_id')
-                ->where('ts.user_id', $expert->id)
-                ->where('ts.status', 'accepted')
-                ->orderByDesc('ts.updated_at')
-                ->limit(3)
-                ->get([
-                    'tasks.title as task_title',
-                    'topics.title as topic_title',
-                ])
-                ->map(function ($row) {
-                    return [
-                        'task' => $row->task_title,
-                        'topic' => $row->topic_title ?: 'Без темы',
-                    ];
-                })
-                ->toArray();
-
-            $awards = [];
-            if ($accepted >= 1) $awards[] = '🥇 Первый уровень';
-            if ($accepted >= 3) $awards[] = '🔥 Серия принятых задач';
-            if ($accepted >= 5) $awards[] = '🛡 Практик кибербезопасности';
-            if ($accepted >= 8) $awards[] = '👑 Топ‑специалист';
-            if ($submitted >= 3 && $submitted === $accepted) $awards[] = '✅ Без отклонений';
-            if (empty($awards)) $awards[] = '🚀 На старте пути';
-            $awardsCount = count($awards);
-
-            $avatar = route('avatar.proxy', ['user' => $expert->id]);
-
-            return [
-                'id' => (int) $expert->id,
-                'name' => $expert->name,
-                'avatar' => $avatar,
-                'progress' => $progress,
-                'accepted_count' => $accepted,
-                'submitted_count' => $submitted,
-                'awards_count' => $awardsCount,
-                'completed_tasks' => $completedTasks,
-                'awards' => $awards,
-            ];
-        })
-        ->sort(function ($a, $b) {
-            return [$b['progress'], $b['awards_count'], $b['accepted_count'], $b['submitted_count']]
-                <=> [$a['progress'], $a['awards_count'], $a['accepted_count'], $a['submitted_count']];
-        })
-        ->take(3)
-        ->values();
+    $ratingService = app(UserRatingService::class);
+    $experts = collect($ratingService->topUsers(3));
 
     if ($experts->isEmpty()) {
         $experts = collect([
@@ -382,6 +313,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/submissions/{submission}/reject', [AdminSubmissionController::class, 'reject'])->name('submissions.reject');
         Route::post('/submissions/{submission}/feedback', [AdminSubmissionController::class, 'updateFeedback'])->name('submissions.feedback');
 
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
+        Route::post('/users', [AdminUserController::class, 'store'])->name('users.store');
+
         Route::get('/topics', [AdminTopicController::class, 'index'])->name('topics.index');
         Route::get('/topics/{topic}/edit', [AdminTopicController::class, 'edit'])->name('topics.edit');
         Route::get('/levels/{level}/edit', [AdminLevelController::class, 'edit'])->name('levels.edit');
@@ -389,6 +324,17 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/levels/{level}/tasks', [AdminTaskController::class, 'store'])->name('tasks.store');
 
         Route::middleware(['admin'])->group(function () {
+            Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+
+            Route::get('/achievements', [AdminAchievementController::class, 'index'])->name('achievements.index');
+            Route::get('/achievements/create', [AdminAchievementController::class, 'create'])->name('achievements.create');
+            Route::post('/achievements', [AdminAchievementController::class, 'store'])->name('achievements.store');
+            Route::get('/achievements/{achievement}/edit', [AdminAchievementController::class, 'edit'])->name('achievements.edit');
+            Route::put('/achievements/{achievement}', [AdminAchievementController::class, 'update'])->name('achievements.update');
+            Route::delete('/achievements/{achievement}', [AdminAchievementController::class, 'destroy'])->name('achievements.destroy');
+
+            Route::post('/topics/{topic}/achievements', [AdminAchievementController::class, 'storeForTopic'])->name('topics.achievements.store');
+
             Route::get('/topics/create', [AdminTopicController::class, 'create'])->name('topics.create');
             Route::post('/topics', [AdminTopicController::class, 'store'])->name('topics.store');
             Route::put('/topics/{topic}', [AdminTopicController::class, 'update'])->name('topics.update');
