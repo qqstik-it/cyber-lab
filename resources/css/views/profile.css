@@ -1,0 +1,101 @@
+.profile-hero {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+.profile-hero-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 16px;
+    object-fit: cover;
+    border: 2px solid var(--line, #2a3340);
+    background: var(--bg-soft, #1f2630);
+}
+.profile-hero-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent, #d8f05e);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+.profile-hero-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+    line-height: 1.2;
+}
+.profile-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+@media (max-width: 767.98px) {
+    .profile-stat-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.profile-stat-card {
+    background: var(--bg-soft, #1f2630);
+    border: 1px solid var(--line, #2a3340);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    min-height: 100px;
+}
+.profile-stat-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted, #9aa4b2);
+    margin-bottom: 0.5rem;
+}
+.profile-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.35rem;
+}
+.profile-stat-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted, #9aa4b2);
+    margin: 0;
+}
+.profile-topic-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+@media (max-width: 575.98px) {
+    .profile-topic-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.profile-topic-card {
+    background: var(--bg-soft, #1f2630);
+    border: 1px solid var(--line, #2a3340);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+}
+.profile-topic-card .progress {
+    height: 8px;
+    background: var(--bg-main, #0d1117);
+}
+.profile-topic-card .progress-bar {
+    background-color: var(--accent, #d8f05e);
+}
+.profile-activity-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+@media (max-width: 991.98px) {
+    .profile-activity-stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 575.98px) {
+    .profile-activity-stat-grid {
+        grid-template-columns: 1fr;
+    }
+}
