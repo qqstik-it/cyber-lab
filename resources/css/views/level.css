@@ -1,0 +1,14 @@
+.nav-pills .nav-link.active {
+    background-color: #d8f05e !important;
+    color: #111 !important;
+    border-color: rgba(0,0,0,0.08) !important;
+}
+
+.line-height-lg {
+    line-height: 1.8;
+}
+
+.task-content img {
+    max-width: 100%;
+    height: auto;
+}
