@@ -12,4 +12,9 @@ class Topic extends Model
     {
         return $this->hasMany(Level::class);
     }
+
+    public function achievements()
+    {
+        return $this->hasMany(Achievement::class)->orderBy('sort_order')->orderBy('id');
+    }
 }

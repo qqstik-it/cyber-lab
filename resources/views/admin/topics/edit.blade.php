@@ -3,7 +3,9 @@
 @section('title', 'Редактировать тему')
 
 @section('admin_content')
-@php($isAdmin = auth()->user()?->isAdmin())
+@php
+    $isAdmin = auth()->user()?->isAdmin();
+@endphp
 <div class="d-flex align-items-center mb-4">
     <a href="{{ route('admin.topics.index') }}" class="btn btn-sm btn-cyan rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
         <span class="fs-4 mt-n1" style="color: #111;">&lsaquo;</span>
@@ -18,6 +20,50 @@
 
 <div class="row g-3">
     <div class="col-lg-10 col-xl-8">
+        @if($isAdmin)
+            <div class="card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="fw-bold fs-5">Награды категории</div>
+                    <span class="text-muted small">{{ $topic->achievements->count() }} шт.</span>
+                </div>
+
+                @if($topic->achievements->isNotEmpty())
+                    <ul class="list-group list-group-flush border rounded mb-4">
+                        @foreach($topic->achievements as $a)
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent text-reset border-secondary-subtle">
+                                <div class="d-flex align-items-center gap-3">
+                                    @if($a->icon)
+                                        <img src="{{ $a->icon }}" alt="" width="36" height="36" class="rounded" style="object-fit: cover;">
+                                    @endif
+                                    <div>
+                                        <div class="fw-medium">{{ $a->title }}</div>
+                                        <div class="text-muted small">Порог: {{ $a->threshold }} &bull; {{ Str::limit($a->description, 60) }}</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ route('admin.achievements.edit', $a) }}" class="btn btn-sm btn-outline-dark">Ред.</a>
+                                    <form action="{{ route('admin.achievements.destroy', $a) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить награду?')">×</button>
+                                    </form>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <div class="text-muted small mb-3">Наград для этой темы пока нет.</div>
+                @endif
+
+                <div class="fw-bold mb-2">Добавить награду</div>
+                <form method="POST" action="{{ route('admin.topics.achievements.store', $topic) }}">
+                    @csrf
+                    @include('admin.achievements._form')
+                    <button type="submit" class="btn btn-sm btn-cyan mt-3">Добавить</button>
+                </form>
+            </div>
+        @endif
+
         @forelse($topic->levels as $lvl)
             <div class="card p-4 mb-3">
                 <div class="d-flex justify-content-between align-items-start gap-3">

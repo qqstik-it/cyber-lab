@@ -63,6 +63,7 @@ class DatabaseSeeder extends Seeder
         // Очистка таблиц
         Schema::disableForeignKeyConstraints();
         DB::table('task_submissions')->truncate();
+        DB::table('achievements')->truncate();
         DB::table('tasks')->truncate();
         DB::table('levels')->truncate();
         DB::table('topics')->truncate();
@@ -192,6 +193,8 @@ class DatabaseSeeder extends Seeder
             }
         }
 
+        $this->call(AchievementSeeder::class);
+
         // Подтемы для базового уровня криптографии
         $cryptoBaseLevel = Level::query()
             ->where('title', 'Базовый уровень')
@@ -310,4 +313,5 @@ class DatabaseSeeder extends Seeder
             ['title' => 'Аутентификация', 'progress' => 20, 'color' => 'danger'],
         ]);
     }
+
 }

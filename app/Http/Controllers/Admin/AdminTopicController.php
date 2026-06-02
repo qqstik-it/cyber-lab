@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Topic;
+use App\Services\AchievementService;
 use Illuminate\Http\Request;
 
 class AdminTopicController extends Controller
 {
+    public function __construct(
+        private AchievementService $achievements
+    ) {}
     public function index()
     {
         $topics = Topic::withCount('levels')->orderBy('id')->get();
@@ -27,7 +31,7 @@ class AdminTopicController extends Controller
             'image' => ['required', 'string', 'max:2048'],
         ]);
 
-        Topic::create([
+        $topic = Topic::create([
             'title' => $data['title'],
             'author' => $data['author'],
             'image' => $data['image'],
@@ -35,12 +39,15 @@ class AdminTopicController extends Controller
             'progress_total' => 0,
         ]);
 
+        $this->achievements->syncTopicAchievements($topic, $request->input('achievements', []));
+
         return redirect()->route('admin.topics.index')->with('success', 'Изменения внесены на сервер');
     }
 
     public function edit(Topic $topic)
     {
         $topic->load([
+            'achievements',
             'levels' => fn ($q) => $q->orderBy('id'),
             'levels.themes' => fn ($q) => $q->orderBy('sort_order')->orderBy('id'),
             'levels.themes.tasks' => fn ($q) => $q->orderBy('order'),

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\TaskSubmission;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -72,5 +73,31 @@ class User extends Authenticatable
     public function canManageTasks(): bool
     {
         return $this->canAccessAdminPanel();
+    }
+
+    /** Просмотр списка и добавление пользователей. */
+    public function canManageUsers(): bool
+    {
+        return $this->canAccessAdminPanel();
+    }
+
+    /** Удаление пользователей — только администратор. */
+    public function canDeleteUsers(): bool
+    {
+        return $this->isAdmin();
+    }
+
+    public function roleLabel(): string
+    {
+        return match ($this->roleName()) {
+            'admin' => 'Администратор',
+            'expert' => 'Эксперт',
+            default => 'Пользователь',
+        };
+    }
+
+    public function taskSubmissions()
+    {
+        return $this->hasMany(TaskSubmission::class);
     }
 }

@@ -3,7 +3,9 @@
 @section('title', 'Редактировать уровень')
 
 @section('admin_content')
-@php($isAdmin = auth()->user()?->isAdmin())
+@php
+    $isAdmin = auth()->user()?->isAdmin();
+@endphp
 <div class="d-flex align-items-center mb-4">
     <a href="{{ route('admin.topics.edit', $level->topic) }}" class="btn btn-sm btn-cyan rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
         <span class="fs-4 mt-n1" style="color: #111;">&lsaquo;</span>

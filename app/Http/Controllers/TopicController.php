@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\File;
 use App\Models\Topic;
 use App\Models\Level;
 use App\Models\TaskSubmission;
+use App\Services\AchievementService;
+use App\Services\UserRatingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -51,18 +53,26 @@ class TopicController extends Controller
         return view('login');
     }
 
-    public function profile()
+    public function profile(AchievementService $achievements, UserRatingService $rating)
     {
-        $recentSubmissions = TaskSubmission::with(['task.level.topic'])
-            ->where('user_id', Auth::id())
-            ->whereIn('status', ['accepted', 'rejected'])
-            ->orderByDesc('updated_at')
-            ->limit(5)
-            ->get();
+        $authUser = Auth::user();
+        $activitySummary = $rating->activitySummary($authUser);
 
         return view('profile', [
             'user' => $this->getUserData(),
-            'recentSubmissions' => $recentSubmissions
+            'profileStats' => [
+                'daysOnPlatform' => $rating->daysOnPlatform($authUser),
+                'rank' => $rating->rankForUser($authUser),
+                'acceptedCount' => $rating->acceptedCount($authUser),
+                'totalTasks' => $rating->totalTasksCount(),
+                'lastActivityAt' => $activitySummary['last_solution_at'],
+                'topicProgress' => $rating->topicProgressForUser($authUser),
+            ],
+            'activity' => [
+                'summary' => $activitySummary,
+                'history' => $rating->activityHistory($authUser),
+            ],
+            'achievementGroups' => $achievements->forUser($authUser),
         ]);
     }
 
