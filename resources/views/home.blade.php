@@ -12,12 +12,13 @@
             <div class="card-body">
                 <h5 class="card-title fw-bold">{{ $topic['title'] }}</h5>
                 <div class="progress mb-2" style="height: 6px;">
-                    <div class="progress-bar" role="progressbar" 
-                         style="width: {{ $topic['progress_total'] > 0 ? ($topic['progress_current'] / $topic['progress_total'] * 100) : 0 }}%; background-color: #d8f05e;">
+                    <div class="progress-bar" role="progressbar"
+                         style="width: {{ $topic['progress_percent'] }}%; background-color: #d8f05e;"
+                         aria-valuenow="{{ $topic['progress_percent'] }}" aria-valuemin="0" aria-valuemax="100">
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="text-muted small">{{ $topic['progress_current'] }}/{{ $topic['progress_total'] }}</span>
+                    <span class="text-muted small">{{ $topic['progress_current'] }}/{{ $topic['progress_total'] }} уровней</span>
                     <a href="{{ route('topic.show', $topic['id']) }}" class="btn btn-sm btn-cyan rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
                         <span class="fs-4 mt-n1" style="color: #111;">&rsaquo;</span>
                     </a>

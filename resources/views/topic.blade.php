@@ -23,6 +23,15 @@
                 <img src="{{ $level['image'] }}" class="rounded w-100" style="height: 150px; object-fit: cover;">
             </div>
             <h5 class="fw-bold">{{ $level['title'] }}</h5>
+            <div class="progress mb-2" style="height: 6px;">
+                <div class="progress-bar" role="progressbar"
+                     style="width: {{ $level['progress_percent'] }}%; background-color: #d8f05e;"
+                     aria-valuenow="{{ $level['progress_percent'] }}" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted small">{{ $level['progress_current'] }}/{{ $level['progress_total'] }} заданий</span>
+            </div>
             <div class="mt-auto d-flex justify-content-end">
                 <a href="{{ route('level.show', $level['id']) }}" class="btn btn-cyan rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
                     <span class="fs-4 mt-n1" style="color: #111;">&rsaquo;</span>

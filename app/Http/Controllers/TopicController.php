@@ -36,15 +36,29 @@ class TopicController extends Controller
         ];
     }
 
-    public function index()
+    public function index(UserRatingService $rating)
     {
-        $topics = Topic::all()
-            ->map(function ($topic) {
-                $item = $topic->toArray();
-                $item['image'] = route('topic.image.proxy', ['topic' => $topic->id]);
-                return $item;
+        $progressByTopic = collect($rating->allTopicsLevelProgressForUser(Auth::user()))
+            ->keyBy('topic_id');
+
+        $topics = Topic::query()
+            ->orderBy('id')
+            ->get()
+            ->map(function (Topic $topic) use ($progressByTopic) {
+                $progress = $progressByTopic->get($topic->id);
+
+                return [
+                    'id' => $topic->id,
+                    'title' => $topic->title,
+                    'image' => route('topic.image.proxy', ['topic' => $topic->id]),
+                    'progress_current' => $progress['completed'] ?? 0,
+                    'progress_total' => $progress['total'] ?? 0,
+                    'progress_percent' => $progress['percent'] ?? 0,
+                ];
             })
-            ->toArray();
+            ->values()
+            ->all();
+
         return view('home', ['topics' => $topics, 'user' => $this->getUserData()]);
     }
 
@@ -76,16 +90,26 @@ class TopicController extends Controller
         ]);
     }
 
-    public function showTopic($id)
+    public function showTopic($id, UserRatingService $rating)
     {
-        $topic = Topic::with('levels')->findOrFail($id)->toArray();
+        $topicModel = Topic::with('levels')->findOrFail($id);
+        $user = Auth::user();
+
+        $topic = $topicModel->toArray();
         $topic['image'] = route('topic.image.proxy', ['topic' => $id]);
-        $topic['levels'] = collect($topic['levels'])
-            ->map(function ($level) {
-                $level['image'] = route('level.image.proxy', ['level' => $level['id']]);
-                return $level;
+        $topic['levels'] = $topicModel->levels
+            ->map(function (Level $level) use ($rating, $user) {
+                $taskProgress = $rating->levelTaskProgressForUser($user, $level);
+                $item = $level->toArray();
+                $item['image'] = route('level.image.proxy', ['level' => $level->id]);
+                $item['progress_current'] = $taskProgress['accepted'];
+                $item['progress_total'] = $taskProgress['total'];
+                $item['progress_percent'] = $taskProgress['percent'];
+
+                return $item;
             })
-            ->toArray();
+            ->values()
+            ->all();
 
         return view('topic', ['topic' => $topic, 'user' => $this->getUserData()]);
     }
