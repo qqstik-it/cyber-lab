@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class UserRatingService
 {
+    private const TOP_LEADER_EMAIL = 'test@test.ru';
+
     public function __construct(
         private AchievementService $achievements
     ) {}
@@ -165,7 +167,11 @@ class UserRatingService
         $rows = $this->rankedUsersQuery()
             ->get()
             ->filter(fn ($row) => (int) $row->accepted_count > 0)
-            ->sortBy(fn ($row) => [-(int) $row->accepted_count, $row->name])
+            ->sortBy(fn ($row) => [
+                -(int) $row->accepted_count,
+                ($row->email ?? '') === self::TOP_LEADER_EMAIL ? 0 : 1,
+                $row->name,
+            ])
             ->take($limit)
             ->values();
 
@@ -222,10 +228,11 @@ class UserRatingService
                 $query->whereNull('users.role')
                     ->orWhere('users.role', '!=', 'admin');
             })
-            ->groupBy('users.id', 'users.name', 'users.avatar')
+            ->groupBy('users.id', 'users.name', 'users.email', 'users.avatar')
             ->select(
                 'users.id',
                 'users.name',
+                'users.email',
                 'users.avatar',
                 DB::raw("SUM(CASE WHEN ts.status = 'accepted' THEN 1 ELSE 0 END) as accepted_count"),
                 DB::raw('COUNT(ts.id) as submitted_count')

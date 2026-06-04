@@ -32,7 +32,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('register') }}" method="POST">
+            <form action="{{ route('register', [], false) }}" method="POST">
                 @csrf
                 <div class="mb-4">
                     <label class="form-label fw-bold">Имя</label>

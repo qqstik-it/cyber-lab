@@ -40,7 +40,7 @@
                             <li><a class="dropdown-item rounded py-2" href="{{ route('profile') }}">Профиль</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <form action="{{ route('logout') }}" method="POST">
+                                <form action="{{ route('logout', [], false) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="dropdown-item rounded py-2 text-danger">Выйти</button>
                                 </form>

@@ -33,7 +33,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('login') }}" method="POST">
+            <form action="{{ route('login', [], false) }}" method="POST">
                 @csrf
                 <div class="mb-4">
                     <label class="form-label fw-bold">E-mail</label>
