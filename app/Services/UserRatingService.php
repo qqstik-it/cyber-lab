@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Level;
 use App\Models\Task;
 use App\Models\TaskSubmission;
 use App\Models\Topic;
@@ -86,6 +87,86 @@ class UserRatingService
                 'total' => $total,
                 'percent' => $percent,
                 'caption' => $caption,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Прогресс по заданиям внутри одного уровня.
+     *
+     * @return array{accepted: int, total: int, percent: int, completed: bool}
+     */
+    public function levelTaskProgressForUser(User $user, Level|int $level): array
+    {
+        $levelId = $level instanceof Level ? $level->id : $level;
+
+        $total = Task::query()->where('level_id', $levelId)->count();
+
+        $accepted = TaskSubmission::query()
+            ->where('user_id', $user->id)
+            ->where('status', 'accepted')
+            ->whereHas('task', fn ($q) => $q->where('level_id', $levelId))
+            ->count();
+
+        $percent = $total > 0 ? (int) round(min(100, ($accepted / $total) * 100)) : 0;
+        $completed = $total > 0 && $accepted >= $total;
+
+        return [
+            'accepted' => $accepted,
+            'total' => $total,
+            'percent' => $percent,
+            'completed' => $completed,
+        ];
+    }
+
+    /**
+     * Прогресс по уровням внутри темы (уровень пройден, если все его задания приняты).
+     *
+     * @return array{completed: int, total: int, percent: int}
+     */
+    public function topicLevelProgressForUser(User $user, Topic|int $topic): array
+    {
+        $topicModel = $topic instanceof Topic
+            ? $topic->loadMissing('levels')
+            : Topic::query()->with('levels')->findOrFail($topic);
+
+        $total = $topicModel->levels->count();
+        $completed = 0;
+
+        foreach ($topicModel->levels as $level) {
+            if ($this->levelTaskProgressForUser($user, $level)['completed']) {
+                $completed++;
+            }
+        }
+
+        $percent = $total > 0 ? (int) round(min(100, ($completed / $total) * 100)) : 0;
+
+        return [
+            'completed' => $completed,
+            'total' => $total,
+            'percent' => $percent,
+        ];
+    }
+
+    /**
+     * @return list<array{topic_id: int, title: string, completed: int, total: int, percent: int}>
+     */
+    public function allTopicsLevelProgressForUser(User $user): array
+    {
+        $topics = Topic::query()->with('levels')->orderBy('id')->get();
+        $result = [];
+
+        foreach ($topics as $topic) {
+            $progress = $this->topicLevelProgressForUser($user, $topic);
+
+            $result[] = [
+                'topic_id' => $topic->id,
+                'title' => $topic->title,
+                'completed' => $progress['completed'],
+                'total' => $progress['total'],
+                'percent' => $progress['percent'],
             ];
         }
 
