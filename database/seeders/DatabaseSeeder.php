@@ -104,16 +104,34 @@ class DatabaseSeeder extends Seeder
                                 'order' => 3
                             ],
                             [
-                                'title' => 'Задание 4. Один Base64',
-                                'content' => '<p>Строка закодирована в Base64: ZmxhZ3tiNjRfYmVnaW5uZXJ9. Найдите исходный флаг.</p>',
-                                'correct_answer' => 'flag{b64_beginner}',
+                                'title' => 'Задание 4. Атбаш: первый флаг',
+                                'content' => '<p>Перехвачено сообщение: <code>uozt{xibkgl_yzhrx}</code>. Известно, что использован шифр Атбаш — каждая буква заменена на симметричную в латинском алфавите (a↔z, b↔y, c↔x и т.д.). Расшифруйте сообщение и найдите флаг.</p>',
+                                'correct_answer' => 'flag{crypto_basic}',
                                 'order' => 4
                             ],
                             [
-                                'title' => 'Задание 5. Двойной Base64',
+                                'title' => 'Задание 5. Атбаш: тайное сообщение',
+                                'content' => '<p>Сообщение зашифровано шифром Атбаш: <code>uozt{zgyzhs_hxsvnv}</code>. Восстановите исходный флаг.</p>',
+                                'correct_answer' => 'flag{atbash_scheme}',
+                                'order' => 5
+                            ],
+                            [
+                                'title' => 'Задание 6. Атбаш: без лишнего',
+                                'content' => '<p>Получена строка: <code>uozt{hvxfiv_nvhhztv}</code>. Каждая буква заменена на симметричную по алфавиту (шифр Атбаш). Расшифруйте сообщение.</p>',
+                                'correct_answer' => 'flag{secure_message}',
+                                'order' => 6
+                            ],
+                            [
+                                'title' => 'Задание 7. Один Base64',
+                                'content' => '<p>Строка закодирована в Base64: ZmxhZ3tiNjRfYmVnaW5uZXJ9. Найдите исходный флаг.</p>',
+                                'correct_answer' => 'flag{b64_beginner}',
+                                'order' => 7
+                            ],
+                            [
+                                'title' => 'Задание 8. Двойной Base64',
                                 'content' => '<p>Строка дважды закодирована в Base64: Wm14aFoxdDBkMjlmYVhOZllYQnliM1psWkE9PQ==. Найдите исходный флаг.</p>',
                                 'correct_answer' => 'flag{too_is_approved}',
-                                'order' => 5
+                                'order' => 8
                             ],
                         ]
                     ],
@@ -204,7 +222,8 @@ class DatabaseSeeder extends Seeder
         if ($cryptoBaseLevel) {
             $cryptoThemes = [
                 1 => 'Шифр Цезаря',
-                2 => 'Base64',
+                2 => 'Шифр Атбаш',
+                3 => 'Base64',
             ];
 
             foreach ($cryptoThemes as $sortOrder => $themeTitle) {
@@ -230,8 +249,17 @@ class DatabaseSeeder extends Seeder
             Task::query()
                 ->where('level_id', $cryptoBaseLevel->id)
                 ->whereIn('title', [
-                    'Задание 4. Один Base64',
-                    'Задание 5. Двойной Base64',
+                    'Задание 4. Атбаш: первый флаг',
+                    'Задание 5. Атбаш: тайное сообщение',
+                    'Задание 6. Атбаш: без лишнего',
+                ])
+                ->update(['level_theme_id' => $themeByTitle['Шифр Атбаш'] ?? null]);
+
+            Task::query()
+                ->where('level_id', $cryptoBaseLevel->id)
+                ->whereIn('title', [
+                    'Задание 7. Один Base64',
+                    'Задание 8. Двойной Base64',
                 ])
                 ->update(['level_theme_id' => $themeByTitle['Base64'] ?? null]);
         }
