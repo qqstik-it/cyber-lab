@@ -1,6 +1,6 @@
 <div class="row mb-5">
     <div class="col-12">
-        <div class="card p-4 overflow-hidden position-relative" style="background-image: url('https://img.freepik.com/free-vector/abstract-background-design-with-shining-lines_1048-12499.jpg'); background-size: cover; height: 180px;">
+        <div class="card p-4 overflow-hidden position-relative" style="background-image: url('{{ asset('img/bg_black.png') }}'); background-size: cover; height: 180px;">
             <div class="d-flex align-items-center h-100 px-4 position-relative" style="z-index: 2; background: rgba(13, 17, 23, 0.78); border-radius: 10px; width: fit-content;">
                 <img src="{{ $user['avatar'] }}" class="rounded-circle border border-white border-4 me-4" width="100" height="100">
                 <div>

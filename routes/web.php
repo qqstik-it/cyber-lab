@@ -17,88 +17,40 @@ use App\Models\Topic;
 use App\Models\Level;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 
-Route::get('/avatar/{user}', function (User $user) {
-    $avatar = trim((string) ($user->avatar ?? ''));
-
-    if ($user->role === 'admin') {
-        $fallbackFile = 'admin.png';
-    } elseif ($user->role === 'expert') {
-        $fallbackFile = 'expert.png';
-    } else {
-        $fallbackFile = 'user.png';
-    }
-    
-    $fallbackPath = public_path('img/' . $fallbackFile);
-    $defaultFallback = function() use ($fallbackPath, $user) {
-        if (is_file($fallbackPath)) {
-            return response()->file($fallbackPath, ['Cache-Control' => 'public, max-age=3600']);
-        }
-        $fallback = 'https://ui-avatars.com/api/?name=' . urlencode($user->name ?? 'User') . '&background=random';
-        return redirect()->away($fallback);
-    };
-
-    if ($avatar === '') {
-        return $defaultFallback();
-    }
-
-    if (preg_match('#^https?://#i', $avatar)) {
-        $urls = [$avatar];
-        if (str_starts_with(strtolower($avatar), 'http://')) {
-            $urls[] = 'https://' . substr($avatar, 7);
-        }
-
-        foreach (array_unique($urls) as $url) {
-            try {
-                $response = Http::timeout(3)
-                    ->withOptions([
-                        'proxy' => '',
-                        'verify' => false,
-                    ])
-                    ->withHeaders([
-                        'User-Agent' => 'CyberLabAvatarProxy/1.0',
-                    ])
-                    ->get($url);
-
-                if (! $response->successful()) {
-                    continue;
-                }
-
-                $contentType = (string) $response->header('Content-Type', '');
-                $contentTypeLower = strtolower($contentType);
-                $isImageByType = str_starts_with($contentTypeLower, 'image/');
-                $isImageByUrl = (bool) preg_match('#\.(png|jpe?g|gif|webp|bmp|svg)(?:\?|$)#i', $url);
-
-                if (! $isImageByType && ! $isImageByUrl) {
-                    continue;
-                }
-
-                return response($response->body(), 200, [
-                    'Content-Type' => $isImageByType ? $contentType : 'image/png',
-                    'Cache-Control' => 'public, max-age=3600',
-                ]);
-            } catch (\Throwable $e) {
-                continue;
+if (! function_exists('servePublicImage')) {
+    function servePublicImage(?string $value, callable $fallback)
+    {
+        $value = trim((string) ($value ?? ''));
+        if ($value !== '' && ! preg_match('#^https?://#i', $value)) {
+            $localPath = public_path(ltrim($value, '/'));
+            if (is_file($localPath)) {
+                return response()->file($localPath, ['Cache-Control' => 'public, max-age=3600']);
             }
         }
 
-        return $defaultFallback();
+        return $fallback();
     }
+}
 
-    $localPath = public_path(ltrim($avatar, '/'));
-    if (is_file($localPath)) {
-        return response()->file($localPath, [
-            'Cache-Control' => 'public, max-age=3600',
-        ]);
-    }
+Route::get('/avatar/{user}', function (User $user) {
+    $fallbackFile = match ($user->role) {
+        'admin' => 'admin.png',
+        'expert' => 'expert.png',
+        default => 'user.png',
+    };
 
-    return $defaultFallback();
+    return servePublicImage($user->avatar, function () use ($fallbackFile) {
+        $fallbackPath = public_path('img/' . $fallbackFile);
+        if (is_file($fallbackPath)) {
+            return response()->file($fallbackPath, ['Cache-Control' => 'public, max-age=3600']);
+        }
+
+        abort(404);
+    });
 })->name('avatar.proxy');
 
 Route::get('/topic-image/{topic}', function (Topic $topic) {
-    $image = trim((string) ($topic->image ?? ''));
-
     $titleLower = mb_strtolower($topic->title);
     if (str_contains($titleLower, 'криптография')) {
         $fallbackFile = 'cripto.png';
@@ -112,78 +64,22 @@ Route::get('/topic-image/{topic}', function (Topic $topic) {
         $fallbackFile = 'logo.png';
     }
 
-    $fallbackPath = public_path('img/' . $fallbackFile);
-    $defaultFallback = function() use ($fallbackPath) {
+    return servePublicImage($topic->image, function () use ($fallbackFile) {
+        $fallbackPath = public_path('img/' . $fallbackFile);
         if (is_file($fallbackPath)) {
             return response()->file($fallbackPath, ['Cache-Control' => 'public, max-age=3600']);
         }
+
         $logoPath = public_path('img/logo.png');
         if (is_file($logoPath)) {
             return response()->file($logoPath, ['Cache-Control' => 'public, max-age=3600']);
         }
+
         abort(404);
-    };
-
-    if ($image === '') {
-        return $defaultFallback();
-    }
-
-    if (preg_match('#^https?://#i', $image)) {
-        $urls = [$image];
-        if (str_starts_with(strtolower($image), 'http://')) {
-            $urls[] = 'https://' . substr($image, 7);
-        }
-
-        foreach (array_unique($urls) as $url) {
-            try {
-                $response = Http::timeout(3)
-                    ->withOptions([
-                        'proxy' => '',
-                        'verify' => false,
-                    ])
-                    ->withHeaders([
-                        'User-Agent' => 'CyberLabTopicImageProxy/1.0',
-                    ])
-                    ->get($url);
-
-                if (! $response->successful()) {
-                    continue;
-                }
-
-                $contentType = (string) $response->header('Content-Type', '');
-                $contentTypeLower = strtolower($contentType);
-                $isImageByType = str_starts_with($contentTypeLower, 'image/');
-                $isImageByUrl = (bool) preg_match('#\.(png|jpe?g|gif|webp|bmp|svg)(?:\?|$)#i', $url);
-
-                if (! $isImageByType && ! $isImageByUrl) {
-                    continue;
-                }
-
-                return response($response->body(), 200, [
-                    'Content-Type' => $isImageByType ? $contentType : 'image/png',
-                    'Cache-Control' => 'public, max-age=3600',
-                ]);
-            } catch (\Throwable $e) {
-                continue;
-            }
-        }
-
-        return $defaultFallback();
-    }
-
-    $localPath = public_path(ltrim($image, '/'));
-    if (is_file($localPath)) {
-        return response()->file($localPath, [
-            'Cache-Control' => 'public, max-age=3600',
-        ]);
-    }
-
-    return $defaultFallback();
+    });
 })->name('topic.image.proxy');
 
 Route::get('/level-image/{level}', function (Level $level) {
-    $image = trim((string) ($level->image ?? ''));
-
     $titleLower = mb_strtolower($level->title);
     if (str_contains($titleLower, 'базов') || str_contains($titleLower, 'easy')) {
         $fallbackFile = 'easy.png';
@@ -194,70 +90,17 @@ Route::get('/level-image/{level}', function (Level $level) {
     } else {
         $fallbackFile = null;
     }
-    
-    $fallbackPath = $fallbackFile ? public_path('img/' . $fallbackFile) : null;
-    $defaultFallback = function() use ($fallbackPath, $level) {
-        if ($fallbackPath && is_file($fallbackPath)) {
-            return response()->file($fallbackPath, ['Cache-Control' => 'public, max-age=3600']);
-        }
-        return redirect()->route('topic.image.proxy', ['topic' => $level->topic_id]);
-    };
 
-    if ($image === '') {
-        return $defaultFallback();
-    }
-
-    if (preg_match('#^https?://#i', $image)) {
-        $urls = [$image];
-        if (str_starts_with(strtolower($image), 'http://')) {
-            $urls[] = 'https://' . substr($image, 7);
-        }
-
-        foreach (array_unique($urls) as $url) {
-            try {
-                $response = Http::timeout(3)
-                    ->withOptions([
-                        'proxy' => '',
-                        'verify' => false,
-                    ])
-                    ->withHeaders([
-                        'User-Agent' => 'CyberLabLevelImageProxy/1.0',
-                    ])
-                    ->get($url);
-
-                if (! $response->successful()) {
-                    continue;
-                }
-
-                $contentType = (string) $response->header('Content-Type', '');
-                $contentTypeLower = strtolower($contentType);
-                $isImageByType = str_starts_with($contentTypeLower, 'image/');
-                $isImageByUrl = (bool) preg_match('#\.(png|jpe?g|gif|webp|bmp|svg)(?:\?|$)#i', $url);
-
-                if (! $isImageByType && ! $isImageByUrl) {
-                    continue;
-                }
-
-                return response($response->body(), 200, [
-                    'Content-Type' => $isImageByType ? $contentType : 'image/png',
-                    'Cache-Control' => 'public, max-age=3600',
-                ]);
-            } catch (\Throwable $e) {
-                continue;
+    return servePublicImage($level->image, function () use ($fallbackFile, $level) {
+        if ($fallbackFile) {
+            $fallbackPath = public_path('img/' . $fallbackFile);
+            if (is_file($fallbackPath)) {
+                return response()->file($fallbackPath, ['Cache-Control' => 'public, max-age=3600']);
             }
         }
-        
-        return $defaultFallback();
-    }
 
-    $localPath = public_path(ltrim($image, '/'));
-    if (is_file($localPath)) {
-        return response()->file($localPath, [
-            'Cache-Control' => 'public, max-age=3600',
-        ]);
-    }
-
-    return $defaultFallback();
+        return redirect()->route('topic.image.proxy', ['topic' => $level->topic_id]);
+    });
 })->name('level.image.proxy');
 
 Route::get('/', function () {
@@ -273,7 +116,7 @@ Route::get('/', function () {
             [
                 'id' => 1,
                 'name' => 'Клим',
-                'avatar' => 'https://i.pravatar.cc/150?u=1',
+                'avatar' => asset('img/user.png'),
                 'progress' => 96,
                 'accepted_count' => 12,
                 'submitted_count' => 13,

@@ -76,7 +76,7 @@ class DatabaseSeeder extends Seeder
                 'id' => 1,
                 'title' => 'Криптография',
                 'author' => 'Катя Кустова',
-                'image' => 'https://img.freepik.com/free-photo/digital-security-concept_23-2149023412.jpg',
+                'image' => 'img/cripto.png',
                 'progress_current' => 1,
                 'progress_total' => 3,
                 'levels' => [
@@ -143,7 +143,7 @@ class DatabaseSeeder extends Seeder
                 'id' => 2,
                 'title' => 'WEB',
                 'author' => 'Катя Кустова',
-                'image' => 'https://img.freepik.com/free-photo/working-on-laptop-in-office_23-2148834015.jpg',
+                'image' => 'img/web.png',
                 'progress_current' => 1,
                 'progress_total' => 3,
                 'levels' => [
@@ -169,7 +169,7 @@ class DatabaseSeeder extends Seeder
                 'id' => 3,
                 'title' => 'Сетевой трафик',
                 'author' => 'Катя Кустова',
-                'image' => 'https://img.freepik.com/free-photo/person-working-on-laptop-at-home_23-2148850937.jpg',
+                'image' => 'img/trafic.png',
                 'progress_current' => 0,
                 'progress_total' => 3,
                 'levels' => [
@@ -182,7 +182,7 @@ class DatabaseSeeder extends Seeder
                 'id' => 4,
                 'title' => 'Аутентификация',
                 'author' => 'Катя Кустова',
-                'image' => 'https://img.freepik.com/free-photo/person-typing-on-laptop_23-2148834014.jpg',
+                'image' => 'img/auth.png',
                 'progress_current' => 0,
                 'progress_total' => 3,
                 'levels' => [

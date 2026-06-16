@@ -179,9 +179,6 @@
                                 <img
                                     src="{{ $expert['avatar'] }}"
                                     alt="{{ $expert['name'] }}"
-                                    referrerpolicy="no-referrer"
-                                    crossorigin="anonymous"
-                                    onerror="this.onerror=null;this.src='https://i.pravatar.cc/150?u={{ $expert['id'] }}';"
                                 >
                                 <div>
                                     <div class="fw-bold">{{ $expert['name'] }}</div>
