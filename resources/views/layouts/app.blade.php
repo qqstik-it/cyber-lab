@@ -34,7 +34,7 @@
                     <div class="dropdown">
                         <a href="#" class="d-flex align-items-center text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
                             <span class="me-2 fw-medium">{{ Auth::user()->name }}</span>
-                            <img src="{{ route('avatar.proxy', ['user' => Auth::id()]) }}" alt="avatar" class="rounded-circle border" style="width: 40px; height: 40px;">
+                            <img src="{{ \App\Support\PublicImage::avatar(Auth::user()) }}" alt="avatar" class="rounded-circle border" style="width: 40px; height: 40px;">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3 p-2">
                             <li><a class="dropdown-item rounded py-2" href="{{ route('profile') }}">Профиль</a></li>

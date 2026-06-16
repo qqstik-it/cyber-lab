@@ -98,28 +98,24 @@
             <div class="row g-3">
                 <div class="col-md-6 col-lg-3 reveal">
                     <div class="service-card dark">
-                        <div class="icon-dot mb-3">🔐</div>
                         <h5 class="fw-bold">Криптография</h5>
                         <p class="mb-0 text-white-50">Шифрование, ключи, цифровая подпись и защита данных.</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 reveal">
                     <div class="service-card accent">
-                        <div class="icon-dot mb-3">🧩</div>
                         <h5 class="fw-bold">WEB</h5>
                         <p class="mb-0">Теги, атрибуты, CSS-селекторы и безопасная структура интерфейсов.</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 reveal">
                     <div class="service-card">
-                        <div class="icon-dot mb-3">🌐</div>
                         <h5 class="fw-bold">Сетевой трафик</h5>
                         <p class="mb-0 text-muted">TCP/IP, анализ пакетов, сетевые сценарии и мониторинг.</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 reveal">
                     <div class="service-card accent">
-                        <div class="icon-dot mb-3">🧷</div>
                         <h5 class="fw-bold">Аутентификация</h5>
                         <p class="mb-0">Типы аутентификации, 2FA и современные методы защиты входа.</p>
                     </div>

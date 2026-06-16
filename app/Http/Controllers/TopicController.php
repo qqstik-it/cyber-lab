@@ -10,6 +10,7 @@ use App\Models\Level;
 use App\Models\TaskSubmission;
 use App\Services\AchievementService;
 use App\Services\UserRatingService;
+use App\Support\PublicImage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,7 +30,7 @@ class TopicController extends Controller
         return [
             "name" => $user->name,
             "role" => $roleLabel,
-            "avatar" => route('avatar.proxy', ['user' => $user->id]),
+            "avatar" => PublicImage::avatar($user),
             "stats" => DB::table('user_stats')->get()->map(function ($item) {
                 return (array) $item;
             })->toArray()
@@ -50,7 +51,7 @@ class TopicController extends Controller
                 return [
                     'id' => $topic->id,
                     'title' => $topic->title,
-                    'image' => route('topic.image.proxy', ['topic' => $topic->id]),
+                    'image' => PublicImage::topic($topic),
                     'progress_current' => $progress['completed'] ?? 0,
                     'progress_total' => $progress['total'] ?? 0,
                     'progress_percent' => $progress['percent'] ?? 0,
@@ -96,12 +97,12 @@ class TopicController extends Controller
         $user = Auth::user();
 
         $topic = $topicModel->toArray();
-        $topic['image'] = route('topic.image.proxy', ['topic' => $id]);
+        $topic['image'] = PublicImage::topic($topicModel);
         $topic['levels'] = $topicModel->levels
             ->map(function (Level $level) use ($rating, $user) {
                 $taskProgress = $rating->levelTaskProgressForUser($user, $level);
                 $item = $level->toArray();
-                $item['image'] = route('level.image.proxy', ['level' => $level->id]);
+                $item['image'] = PublicImage::level($level);
                 $item['progress_current'] = $taskProgress['accepted'];
                 $item['progress_total'] = $taskProgress['total'];
                 $item['progress_percent'] = $taskProgress['percent'];

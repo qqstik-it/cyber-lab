@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\TaskSubmission;
 use App\Models\Topic;
 use App\Models\User;
+use App\Support\PublicImage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -290,7 +291,7 @@ class UserRatingService
             return [
                 'id' => (int) $row->id,
                 'name' => $row->name,
-                'avatar' => route('avatar.proxy', ['user' => $row->id]),
+                'avatar' => $user ? PublicImage::avatar($user) : asset('img/user.png'),
                 'progress' => $progress,
                 'accepted_count' => $accepted,
                 'submitted_count' => $submitted,
