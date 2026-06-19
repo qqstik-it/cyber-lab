@@ -12,6 +12,12 @@
 @endpush
 
 @section('content')
+@php
+    $webLabEmbed = null;
+    if (! empty($currentTask) && \App\Support\WebLabPageEmbed::applies($level, $currentTask)) {
+        $webLabEmbed = \App\Support\WebLabPageEmbed::embedKey($currentTask);
+    }
+@endphp
 <!-- Верхняя панель уровня -->
 <div class="w-100 p-3 text-center text-white" style="background-color: #0b0b0b; border-bottom: 3px solid #d8f05e; position: sticky; top: 0; z-index: 1000;">
     <h3 class="m-0 fw-bold">{{ $level->title }}</h3>
@@ -112,6 +118,10 @@
                 @endforelse
             </div>
         @endif
+
+        @if($webLabEmbed)
+            @include('level._web_lab_page_embed', ['webLabEmbed' => $webLabEmbed, 'embedSlot' => 'sidebar'])
+        @endif
     </div>
 
     <!-- Основной контент задания -->
@@ -144,7 +154,14 @@
             </div>
         </div>
 
+        @if($webLabEmbed)
+            @include('level._web_lab_page_embed', ['webLabEmbed' => $webLabEmbed, 'embedSlot' => 'main'])
+        @endif
+
         <div class="mt-5">
+            @if($webLabEmbed)
+                @include('level._web_lab_page_embed', ['webLabEmbed' => $webLabEmbed, 'embedSlot' => 'form'])
+            @endif
             <form method="POST" action="{{ route('tasks.submit', $currentTask) }}">
                 @csrf
                 <div class="d-flex justify-content-center">

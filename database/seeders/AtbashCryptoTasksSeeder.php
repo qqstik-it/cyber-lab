@@ -27,11 +27,6 @@ class AtbashCryptoTasksSeeder extends Seeder
             ['sort_order' => 2]
         );
 
-        LevelTheme::query()
-            ->where('level_id', $cryptoBaseLevel->id)
-            ->where('title', 'Base64')
-            ->update(['sort_order' => 3]);
-
         $tasks = [
             [
                 'title' => 'Задание 4. Атбаш: первый флаг',
@@ -63,28 +58,6 @@ class AtbashCryptoTasksSeeder extends Seeder
             );
         }
 
-        Task::query()
-            ->where('level_id', $cryptoBaseLevel->id)
-            ->where('title', 'Задание 4. Один Base64')
-            ->update(['title' => 'Задание 7. Один Base64', 'order' => 7]);
-
-        Task::query()
-            ->where('level_id', $cryptoBaseLevel->id)
-            ->where('title', 'Задание 5. Двойной Base64')
-            ->update(['title' => 'Задание 8. Двойной Base64', 'order' => 8]);
-
-        $base64Theme = LevelTheme::query()
-            ->where('level_id', $cryptoBaseLevel->id)
-            ->where('title', 'Base64')
-            ->first();
-
-        if ($base64Theme) {
-            Task::query()
-                ->where('level_id', $cryptoBaseLevel->id)
-                ->whereIn('title', ['Задание 7. Один Base64', 'Задание 8. Двойной Base64'])
-                ->update(['level_theme_id' => $base64Theme->id]);
-        }
-
-        $this->command?->info('Подтема «Шифр Атбаш» и 3 задания добавлены. Base64 перенумерованы в 7–8.');
+        $this->command?->info('Подтема «Шифр Атбаш» и 3 задания добавлены.');
     }
 }

@@ -121,18 +121,6 @@ class DatabaseSeeder extends Seeder
                                 'correct_answer' => 'flag{secure_message}',
                                 'order' => 6
                             ],
-                            [
-                                'title' => 'Задание 7. Один Base64',
-                                'content' => '<p>Строка закодирована в Base64: ZmxhZ3tiNjRfYmVnaW5uZXJ9. Найдите исходный флаг.</p>',
-                                'correct_answer' => 'flag{b64_beginner}',
-                                'order' => 7
-                            ],
-                            [
-                                'title' => 'Задание 8. Двойной Base64',
-                                'content' => '<p>Строка дважды закодирована в Base64: Wm14aFoxdDBkMjlmYVhOZllYQnliM1psWkE9PQ==. Найдите исходный флаг.</p>',
-                                'correct_answer' => 'flag{too_is_approved}',
-                                'order' => 8
-                            ],
                         ]
                     ],
                     ['id' => 2, 'title' => 'Средний уровень', 'subtitle' => 'Алгоритмы AES', 'tasks' => []],
@@ -147,20 +135,7 @@ class DatabaseSeeder extends Seeder
                 'progress_current' => 1,
                 'progress_total' => 3,
                 'levels' => [
-                    ['id' => 4, 'title' => 'Базовый уровень', 'subtitle' => 'Теги и атрибуты', 'tasks' => [
-                        [
-                            'title' => 'Базовая структура HTML',
-                            'content' => '<p>Создайте HTML-документ с заголовком, абзацем и списком из 3 пунктов.</p>',
-                            'correct_answer' => 'готово',
-                            'order' => 1
-                        ],
-                        [
-                            'title' => 'Ссылки и изображения',
-                            'content' => '<p>Добавьте внешнюю ссылку и изображение с корректным alt.</p>',
-                            'correct_answer' => 'готово',
-                            'order' => 2
-                        ],
-                    ]],
+                    ['id' => 4, 'title' => 'Базовый уровень', 'subtitle' => 'Теги и атрибуты', 'tasks' => []],
                     ['id' => 5, 'title' => 'Средний уровень', 'subtitle' => 'CSS селекторы', 'tasks' => []],
                     ['id' => 6, 'title' => 'Продвинутый уровень', 'subtitle' => 'CSS свойства', 'tasks' => []],
                 ]
@@ -223,7 +198,6 @@ class DatabaseSeeder extends Seeder
             $cryptoThemes = [
                 1 => 'Шифр Цезаря',
                 2 => 'Шифр Атбаш',
-                3 => 'Base64',
             ];
 
             foreach ($cryptoThemes as $sortOrder => $themeTitle) {
@@ -254,14 +228,6 @@ class DatabaseSeeder extends Seeder
                     'Задание 6. Атбаш: без лишнего',
                 ])
                 ->update(['level_theme_id' => $themeByTitle['Шифр Атбаш'] ?? null]);
-
-            Task::query()
-                ->where('level_id', $cryptoBaseLevel->id)
-                ->whereIn('title', [
-                    'Задание 7. Один Base64',
-                    'Задание 8. Двойной Base64',
-                ])
-                ->update(['level_theme_id' => $themeByTitle['Base64'] ?? null]);
         }
 
         // Демонстрационные прохождения для лендинга (топ-3)
