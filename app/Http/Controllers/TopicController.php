@@ -63,11 +63,6 @@ class TopicController extends Controller
         return view('home', ['topics' => $topics, 'user' => $this->getUserData()]);
     }
 
-    public function login()
-    {
-        return view('login');
-    }
-
     public function profile(AchievementService $achievements, UserRatingService $rating)
     {
         $authUser = Auth::user();

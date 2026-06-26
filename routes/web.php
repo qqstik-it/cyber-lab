@@ -11,38 +11,9 @@ use App\Http\Controllers\Admin\AdminTaskController;
 use App\Http\Controllers\Admin\AdminSubmissionController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminAchievementController;
-use App\Services\UserRatingService;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\LandingController;
 
-Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('home');
-    }
-
-    $ratingService = app(UserRatingService::class);
-    $experts = collect($ratingService->topUsers(3));
-
-    if ($experts->isEmpty()) {
-        $experts = collect([
-            [
-                'id' => 1,
-                'name' => 'Клим',
-                'avatar' => asset('img/user.png'),
-                'progress' => 96,
-                'accepted_count' => 12,
-                'submitted_count' => 13,
-                'completed_tasks' => [
-                    ['task' => 'Создание ключей PGP', 'topic' => 'Криптография'],
-                    ['task' => 'Экспорт и импорт ключа', 'topic' => 'Криптография'],
-                    ['task' => 'Шифрование файлов', 'topic' => 'Криптография'],
-                ],
-                'awards' => ['🥇 Первый уровень', '🔥 Серия принятых задач', '👑 Топ‑специалист'],
-            ],
-        ]);
-    }
-
-    return view('landing', ['experts' => $experts]);
-})->name('landing');
+Route::get('/', LandingController::class)->name('landing');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

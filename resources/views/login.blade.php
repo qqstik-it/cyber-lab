@@ -3,6 +3,7 @@
 @section('title', 'Вход')
 
 @section('content')
+<a href="{{ route('landing') }}" class="auth-back-link" aria-label="На главную">←</a>
 <div class="auth-page min-vh-100 d-flex align-items-center">
 <div class="container-fluid">
 <div class="row align-items-center">

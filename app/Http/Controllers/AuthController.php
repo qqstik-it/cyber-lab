@@ -11,6 +11,10 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
+        if (Auth::check()) {
+            return redirect()->route('home');
+        }
+
         return view('login');
     }
 
@@ -33,6 +37,10 @@ class AuthController extends Controller
 
     public function showRegister()
     {
+        if (Auth::check()) {
+            return redirect()->route('home');
+        }
+
         return view('register');
     }
 
